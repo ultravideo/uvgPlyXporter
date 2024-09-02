@@ -1,0 +1,15 @@
+#include <cstdint>
+#include <string>
+
+namespace plyxporter {
+
+std::string get_version() { return "@plyXporter_VERSION@"; }
+
+uint16_t get_version_major() { return @plyXporter_VERSION_MAJOR@; }
+
+uint16_t get_version_minor() { return @plyXporter_VERSION_MINOR@; }
+
+uint16_t get_version_patch() { return @plyXporter_VERSION_PATCH@; }
+
+// std::string get_git_hash() {return "@plyXporter_GIT_HASH@";}
+} // namespace plyxporter
