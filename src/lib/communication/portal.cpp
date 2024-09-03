@@ -105,7 +105,18 @@ namespace plyxporter {
             std::shared_ptr<std::vector<Vec3>> positions = std::make_shared<std::vector<Vec3>>(reinterpret_cast<const Vec3*>(Pmessage.data()), reinterpret_cast<const Vec3*>(Pmessage.data()) + numPoints);
             std::shared_ptr<std::vector<VecU8>> attributes = std::make_shared<std::vector<VecU8>>(reinterpret_cast<const VecU8*>(Cmessage.data()), reinterpret_cast<const VecU8*>(Cmessage.data()) + numPoints);
             count++;
-            std::shared_ptr<Job> export_job = std::make_shared<Job>("ExportJob", 0, &Portal::export_ply, this, "C:/Users/Guillaume/workspace/plyXporter/build/bin/PLY/test" + std::to_string(count), positions, attributes);
+
+            // if count < 10 => count_str = 0001, 0002, 0003, ...
+            // if count < 100 => count_str = 0010, 0011, 0012, ...
+            // if count < 1000 => count_str = 0100, 0101, 0102, ...
+            std::string count_str = std::to_string(count);
+            while (count_str.size() < 4) {
+                count_str = "0" + count_str;
+            }
+            
+            std::shared_ptr<Job> export_job = std::make_shared<Job>("ExportJob", 0, &Portal::export_ply, this, "C:/Users/Guillaume/workspace/plyXporter/build/bin/PLY/binary-" + count_str, positions, attributes);
+
+            // export_ply("C:/Users/Guillaume/workspace/plyXporter/build/bin/PLY/test" + std::to_string(count), positions, attributes);
 
             thread_queue->submitJob(export_job);
 
@@ -134,7 +145,7 @@ namespace plyxporter {
 
     void Portal::export_ply(std::string filename, std::shared_ptr<std::vector<Vec3>> &vertices, std::shared_ptr<std::vector<VecU8>> &colors) {
         std::filebuf fb_binary;
-        fb_binary.open(filename + "-binary.ply", std::ios::out | std::ios::binary);
+        fb_binary.open(filename + ".ply", std::ios::out | std::ios::binary);
         std::ostream outstream_binary(&fb_binary);
         if (outstream_binary.fail()) throw std::runtime_error("failed to open " + filename);
 
