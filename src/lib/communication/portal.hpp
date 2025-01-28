@@ -16,12 +16,20 @@
 
 #include "tinyply.h"
 
+#define POINT_UINT16
+
 namespace plyxporter {
     typedef struct Vec3 {
         float x;
         float y;
         float z;
     } Vec3;
+
+    typedef struct VecU16 {
+        uint16_t x;
+        uint16_t y;
+        uint16_t z;
+    } VecU16;
 
     typedef struct VecU8 {
         uint8_t x;
@@ -45,13 +53,14 @@ namespace plyxporter {
         /***** *****/
         std::mutex receive_message_mutex;
         std::condition_variable receive_message_cv;
+        std::unique_lock<std::mutex> receive_message_lock;
         int export_count = 0;
 
         /*** Control & Data ***/ 
         bool stop_flag = false;
         /*** ************** ***/ 
     public:
-        Portal();
+        Portal(std::string _color_addr, std::string _position_addr);
         ~Portal();
 
         void set_position_socket(std::string address);
@@ -64,7 +73,12 @@ namespace plyxporter {
         void zmq_run();
 
     private:
+        // Template for exporting ply files
+#ifndef POINT_UINT16
         void export_ply(std::string filename, std::shared_ptr<std::vector<Vec3>> &vertices, std::shared_ptr<std::vector<VecU8>> &colors);
+#else
+        void export_ply(std::string filename, std::shared_ptr<std::vector<VecU16>> &vertices, std::shared_ptr<std::vector<VecU8>> &colors);
+#endif
     };
 };
 
