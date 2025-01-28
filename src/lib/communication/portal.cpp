@@ -6,10 +6,16 @@
 
 
 namespace plyxporter {
-    Portal::Portal(std::string _color_addr, std::string _position_addr) {
+    Portal::Portal(std::string _color_addr, std::string _position_addr, std::string _save_directory) {
         zmq_handler = std::make_shared<zmqHandler>();
         zmq_handler->color_address = _color_addr;
         zmq_handler->position_address = _position_addr;
+        zmq_handler->save_directory = _save_directory;
+
+
+        if (!std::filesystem::exists(zmq_handler->save_directory)) {
+            std::filesystem::create_directories(zmq_handler->save_directory);
+        }
     }
 
     Portal::~Portal() {
@@ -129,7 +135,8 @@ namespace plyxporter {
                 count_str = "0" + count_str;
             }
             
-            std::shared_ptr<Job> export_job = std::make_shared<Job>("ExportJob", 0, &Portal::export_ply, this, "C:/Users/Guillaume/workspace/06-plyxporter/build/bin/PLY/binary-" + count_str, positions, attributes);
+            std::string filename = zmq_handler->save_directory + "/binary-";
+            std::shared_ptr<Job> export_job = std::make_shared<Job>("ExportJob", 0, &Portal::export_ply, this, filename + count_str, positions, attributes);
 
             // export_ply("C:/Users/Guillaume/workspace/plyXporter/build/bin/PLY/test" + std::to_string(count), positions, attributes);
 

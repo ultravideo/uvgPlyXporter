@@ -5,8 +5,8 @@
 
 namespace plyxporter {
     namespace API {
-        void run(std::string _color_addr, std::string _position_addr) {
-            Portal portal(_color_addr, _position_addr);
+        void run(std::string _color_addr, std::string _position_addr, std::string _save_directory) {
+            Portal portal(_color_addr, _position_addr, _save_directory);
             portal.zmq_run();
         }
     } // namespace API

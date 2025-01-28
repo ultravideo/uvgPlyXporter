@@ -8,7 +8,7 @@
 namespace plyxporter {
     
     namespace API {
-        void run(std::string _color_addr, std::string _position_addr);
+        void run(std::string _color_addr, std::string _position_addr, std::string _save_directory);
     } // namespace API
 } 
 
