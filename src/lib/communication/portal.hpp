@@ -16,7 +16,7 @@
 
 #include "tinyply.h"
 
-#define POINT_UINT16
+// #define POINT_UINT16
 
 namespace plyxporter {
     typedef struct Vec3 {
